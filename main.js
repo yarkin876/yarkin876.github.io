@@ -1,3 +1,4 @@
+// JavaScript code for controlling music playback
 var audio = document.getElementById('bg-music');
 
 function startMusic() {
