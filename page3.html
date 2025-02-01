@@ -52,56 +52,65 @@
 <button type="button" class="btn btn-danger">Boş</button>
 
 
-    <!-- Start and Pause buttons -->
 <div class="container">
-    <h2 class="text-center" >Bileşik Faiz Hesaplayıcı</h2>
-    <form id="faizForm">
-        <div class="mb-3">
-            <label for="anaPara" class="form-label">Ana Para (₺):</label>
-            <input type="number" class="form-control" id="anaPara" required>
-        </div>
-        <div class="mb-3">
-            <label for="faizOrani" class="form-label">Faiz Oranı (%):</label>
-            <input type="number" class="form-control" id="faizOrani" step="0.01" required>
-        </div>
-        <div class="mb-3">
-            <label for="gunSayisi" class="form-label">Gün Sayısı:</label>
-            <input type="number" class="form-control" id="gunSayisi" required>
-        </div>
-        <div class="mb-3">
-            <label for="vergiOrani" class="form-label">Vergi Oranı (%):</label>
-            <input type="number" class="form-control" id="vergiOrani" step="0.01" required>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="hesaplaFaiz()">Hesapla</button>
-    </form>
+    <h2 class="text-center">Bileşik Faiz Hesaplayıcı</h2>
 
-    <div class="result text-center" id="sonuc"></div>
+    <label for="anaPara">Ana Para (₺):</label>
+    <input type="number" id="anaPara" class="form-control" placeholder="Başlangıç yatırım tutarı">
+
+    <label for="faizOrani">Faiz Oranı (% yıllık):</label>
+    <input type="number" id="faizOrani" class="form-control" placeholder="Yıllık faiz oranı">
+
+    <label for="gun">Yatırım Süresi (Gün):</label>
+    <input type="number" id="gun" class="form-control" placeholder="Kaç gün yatırım yapacaksınız?">
+
+    <label for="vergiOrani">Vergi Kesintisi (%):</label>
+    <input type="number" id="vergiOrani" class="form-control" placeholder="Vergi oranı (örn: 15)">
+
+    <label for="kurOncesi">Yatırım Öncesi Dolar Kuru (₺):</label>
+    <input type="number" id="kurOncesi" class="form-control" placeholder="Önceki dolar kuru">
+
+    <label for="kurSonrasi">Yatırım Sonrası Dolar Kuru (₺):</label>
+    <input type="number" id="kurSonrasi" class="form-control" placeholder="Sonraki dolar kuru">
+
+    <button class="btn btn-primary mt-3" onclick="hesapla()">Hesapla</button>
+
+    <h4 class="mt-3">Sonuçlar:</h4>
+    <p id="brutKazanc"></p>
+    <p id="netKazanc"></p>
+    <p id="dolarOncesi"></p>
+    <p id="dolarSonrasi"></p>
 </div>
 
 <script>
-    function hesaplaFaiz() {
-        let P = parseFloat(document.getElementById("anaPara").value);
-        let r = parseFloat(document.getElementById("faizOrani").value) / 100;
-        let t = parseFloat(document.getElementById("gunSayisi").value) / 365;
+    function hesapla() {
+        let anaPara = parseFloat(document.getElementById("anaPara").value);
+        let faizOrani = parseFloat(document.getElementById("faizOrani").value) / 100; // Yıllık faiz oranı
+        let gun = parseFloat(document.getElementById("gun").value); // Gün cinsinden süre
         let vergiOrani = parseFloat(document.getElementById("vergiOrani").value) / 100;
-        let n = 365; // Günlük bileşik faiz
+        let kurOncesi = parseFloat(document.getElementById("kurOncesi").value);
+        let kurSonrasi = parseFloat(document.getElementById("kurSonrasi").value);
 
-        if (isNaN(P) || isNaN(r) || isNaN(t) || isNaN(vergiOrani)) {
-            document.getElementById("sonuc").innerText = "Lütfen tüm alanları doldurun.";
+        if (isNaN(anaPara) || isNaN(faizOrani) || isNaN(gun) || isNaN(vergiOrani) || isNaN(kurOncesi) || isNaN(kurSonrasi)) {
+            alert("Lütfen tüm alanları doldurun!");
             return;
         }
 
-        let A = P * Math.pow(1 + (r / n), n * t);
-        let brutKazanc = A - P;
-        let vergi = brutKazanc * vergiOrani;
+        // Günlük faiz oranı (yıllık faiz oranını 365'e bölerek buluyoruz)
+        let gunlukFaizOrani = faizOrani / 365;
+
+        // Günlük bileşik faiz hesaplaması: FV = P * (1 + r)^t
+        let brutKazanc = anaPara * Math.pow((1 + gunlukFaizOrani), gun);
+        let vergi = (brutKazanc - anaPara) * vergiOrani;
         let netKazanc = brutKazanc - vergi;
 
-        document.getElementById("sonuc").innerHTML = `
-            <p>📌 Toplam Tutar: <b>₺${A.toFixed(2)}</b></p>
-            <p>💰 Brüt Kazanç: <b>₺${brutKazanc.toFixed(2)}</b></p>
-            <p>💸 Vergi Kesintisi (%${(vergiOrani * 100).toFixed(2)}): <b>-₺${vergi.toFixed(2)}</b></p>
-            <p>✅ Net Kazanç: <b>₺${netKazanc.toFixed(2)}</b></p>
-        `;
+        let dolarMiktariOncesi = anaPara / kurOncesi;
+        let dolarMiktariSonrasi = netKazanc / kurSonrasi;
+
+        document.getElementById("brutKazanc").innerHTML = `📈 Brüt Kazanç: <b>${brutKazanc.toFixed(2)}₺</b>`;
+        document.getElementById("netKazanc").innerHTML = `💰 Vergi Sonrası Net Kazanç: <b>${netKazanc.toFixed(2)}₺</b>`;
+        document.getElementById("dolarOncesi").innerHTML = `💵 Yatırım Öncesi Alınan Dolar: <b>${dolarMiktariOncesi.toFixed(2)}$</b>`;
+        document.getElementById("dolarSonrasi").innerHTML = `💵 Yatırım Sonrası Net Kazanç ile Alınan Dolar: <b>${dolarMiktariSonrasi.toFixed(2)}$</b>`;
     }
 </script>
     
