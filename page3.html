@@ -80,15 +80,15 @@
 
 <script>
     function hesapla() {
-        let anaPara = parseFloat(document.getElementById("anaPara").value);
-        let faizOrani = parseFloat(document.getElementById("faizOrani").value) / 100;
-        let gun = parseFloat(document.getElementById("gun").value);
-        let vergiOrani = parseFloat(document.getElementById("vergiOrani").value) / 100;
-        let kurOncesi = parseFloat(document.getElementById("kurOncesi").value);
-        let kurSonrasi = parseFloat(document.getElementById("kurSonrasi").value);
+        let anaPara = parseFloat(document.getElementById("anaPara").value) || 0;
+        let faizOrani = parseFloat(document.getElementById("faizOrani").value) / 100 || 0;
+        let gun = parseFloat(document.getElementById("gun").value) || 0;
+        let vergiOrani = parseFloat(document.getElementById("vergiOrani").value) / 100 || 0;
+        let kurOncesi = parseFloat(document.getElementById("kurOncesi").value) || 0;
+        let kurSonrasi = parseFloat(document.getElementById("kurSonrasi").value) || 0;
 
-        if (isNaN(anaPara) || isNaN(faizOrani) || isNaN(gun) || isNaN(vergiOrani) || isNaN(kurOncesi) || isNaN(kurSonrasi)) {
-            alert("Lütfen tüm alanları doldurun!");
+        if (anaPara === 0 || faizOrani === 0 || gun === 0 || kurOncesi === 0 || kurSonrasi === 0) {
+            alert("Lütfen tüm alanları doldurun ve sıfırdan büyük değerler girin!");
             return;
         }
 
