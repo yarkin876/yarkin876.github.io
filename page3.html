@@ -106,11 +106,15 @@
         let dolarMiktariOncesi = anaPara / kurOncesi;
         let dolarMiktariSonrasi = netKazanc / kurSonrasi;
 
+        // Dolar cinsinden kazanç hesaplama
+        let dolarKazanci = dolarMiktariSonrasi - dolarMiktariOncesi;
+
         document.getElementById("brutKazanc").innerHTML = `📈 Brüt Kazanç: <b>${brutKazanc.toFixed(2)}₺</b>`;
         document.getElementById("netKazanc").innerHTML = `💰 Vergi Sonrası Net Kazanç: <b>${netKazanc.toFixed(2)}₺</b>`;
         document.getElementById("gercekKazanc").innerHTML = `🟢 Vergi Sonrası Gerçek Kazanç: <b>${gercekKazanc.toFixed(2)}₺</b>`;
         document.getElementById("dolarOncesi").innerHTML = `💵 Yatırım Öncesi Alınan Dolar: <b>${dolarMiktariOncesi.toFixed(2)}$</b>`;
         document.getElementById("dolarSonrasi").innerHTML = `💵 Yatırım Sonrası Net Kazanç ile Alınan Dolar: <b>${dolarMiktariSonrasi.toFixed(2)}$</b>`;
+        document.getElementById("dolarKazanc").innerHTML = `🟢 Toplam Dolar Kazancı: <b>${dolarKazanci.toFixed(2)}$</b>`;
     }
 </script>
 
